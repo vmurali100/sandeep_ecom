@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { ProductModel } from "./ProductModel";
 import { Products } from "./Products";
 
-const handleAddproduct = () => {
-  console.log("handleAddproduct called");
-};
-
+export interface Product {
+  productName: string;
+  gender: string;
+  subjett: string;
+  state: string;
+  age: number;
+}
 export const DashBoard: React.FC<any> = () => {
   const [showModal, setshowModal] = useState(false);
 
@@ -13,8 +16,16 @@ export const DashBoard: React.FC<any> = () => {
     setshowModal(true);
   };
 
-  const closeModel = () => {
+  const handleModalClose = () => {
     setshowModal(false);
+  };
+  const handleAddproduct = () => {
+    handleModal();
+    //Actions
+  };
+
+  const addProduct = (product: Product) => {
+    handleModalClose();
   };
 
   return (
@@ -35,10 +46,10 @@ export const DashBoard: React.FC<any> = () => {
           </div>
         </div>
         <Products />
-        <button type="button" className="btn btn-primary" onClick={handleModal}>
-          Launch demo modal
-        </button>
-        {showModal && <ProductModel closeModel={closeModel} />}
+
+        {showModal && (
+          <ProductModel closeModel={handleModalClose} addProduct={addProduct} />
+        )}
       </div>
     </div>
   );
