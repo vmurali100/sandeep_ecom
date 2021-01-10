@@ -9,17 +9,68 @@ export const ProductModel: React.FC<ProductModelProps> = ({
   closeModel,
   addProduct,
 }) => {
-  const [product, setproduct] = useState({ productName: "" });
+  const [product, setproduct] = useState(
+    {
+      productName: "",
+      productQty: 0,
+      email: "",
+      category: '',
+      discount: 0,
+      sizes: [],
+    });
+
+  const [formValid, setformValid] = useState(false)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    let product: Product = {
-      productName: "",
-    };
-    product.productName = event.target.value;
-    setproduct(product);
+    let newproduct: any = { ...product }
+    let propname = event.target.name
+    newproduct[propname] = event.target.value;
+    setproduct(newproduct);
+    handleCheck(newproduct)
   };
+
+  const handleCheck = (prod: any) => {
+    let invalid = false;
+    for (let a in prod) {
+      if (a !== "sizes") {
+        if (prod[a] == "") {
+          invalid = true
+        }
+      } else {
+        if (prod[a].length == 0) {
+          invalid = true
+        }
+      }
+    }
+    if (invalid) {
+      setformValid(false)
+    } else {
+      setformValid(true)
+    }
+    console.log("invalid :", invalid)
+  }
+  const handleCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    let newProduct: any = { ...product }
+    if (newProduct.sizes.indexOf(value) == -1) {
+      newProduct.sizes.push(value)
+    } else {
+      newProduct.sizes.splice(newProduct.sizes.indexOf(value), 1)
+    }
+    console.log(product)
+    setproduct(newProduct)
+    handleCheck(newProduct)
+  }
+
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    let value = e.target.value
+    let newProduct: any = { ...product }
+    newProduct['category'] = value;
+    setproduct(newProduct)
+  }
   return (
     <div>
+
       <div
         aria-labelledby="exampleModalLabel"
         style={{ display: "block !important" }}
@@ -41,15 +92,100 @@ export const ProductModel: React.FC<ProductModelProps> = ({
             </div>
             <div className="modal-body">
               <form>
-                <div className="mb-3">
-                  <label className="form-label">Product Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="productName"
-                    value={product.productName}
-                    onChange={handleChange}
-                  />
+                <div className="row">
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Product Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="productName"
+                        value={product.productName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">User Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        value={product.email}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Product Qty</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="productQty"
+                        value={product.productQty}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    {/* <div className="mb-3">
+                      <label className="form-label">Product Delivery Date</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="prodDate"
+                        value={product.prodDate}
+                        onChange={handleChange}
+                      />
+                    </div> */}
+
+                  </div>
+                  <div className="col">
+                    <div className="mb-3">
+                      <label className="form-label">Product Size</label>
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" value="Normal" onChange={(e) => { handleCheckChange(e) }} />
+                        <label className="form-check-label">
+                          Normal
+  </label>
+                      </div>
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" value="XL" onChange={handleCheckChange} />
+                        <label className="form-check-label">
+                          XL
+  </label>
+                      </div>
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" value="XXL" onChange={handleCheckChange} />
+                        <label className="form-check-label">
+                          XXL
+  </label>
+                      </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Product Category</label>
+                      <select className="form-select" onChange={handleSelectChange}
+                      >
+                        <option selected>Select Product Category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Foods">Foods</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Discount Avalilability</label>
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="discount" value="yes" onChange={handleChange} />
+                        <label className="form-check-label" >
+                          Yes
+  </label>
+                      </div>
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="discount" value="no" onChange={handleChange} />
+                        <label className="form-check-label" >
+                          No
+  </label>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </form>
             </div>
@@ -60,6 +196,7 @@ export const ProductModel: React.FC<ProductModelProps> = ({
                 onClick={() => {
                   addProduct(product);
                 }}
+                disabled={!formValid}
               >
                 Add Product
               </button>

@@ -4,10 +4,12 @@ import { Products } from "./Products";
 
 export interface Product {
   productName: string;
-  gender: string;
-  subjett: string;
-  state: string;
-  age: number;
+  productQty: number;
+  category: string;
+  discount: number;
+  sizes: string[];
+  email: string;
+  prodDate?: Date;
 }
 export const DashBoard: React.FC<any> = () => {
   const [showModal, setshowModal] = useState(false);
@@ -25,6 +27,7 @@ export const DashBoard: React.FC<any> = () => {
   };
 
   const addProduct = (product: Product) => {
+    console.log(product)
     handleModalClose();
   };
 
