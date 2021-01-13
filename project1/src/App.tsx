@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { DashBoard } from "./DashBoard";
 import { Navbar } from "./Navbar";

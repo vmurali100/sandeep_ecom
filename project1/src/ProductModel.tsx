@@ -1,4 +1,4 @@
-import React, { ChangeEvent, PropsWithChildren, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Product } from "./DashBoard";
 
 interface ProductModelProps {
@@ -19,7 +19,8 @@ export const ProductModel: React.FC<ProductModelProps> = ({
       sizes: [],
     });
 
-  const [formValid, setformValid] = useState(false)
+  const [formValid, setformValid] = useState(false);
+  const [emailValid, setemailValid] = useState(false)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     let newproduct: any = { ...product }
@@ -27,17 +28,30 @@ export const ProductModel: React.FC<ProductModelProps> = ({
     newproduct[propname] = event.target.value;
     setproduct(newproduct);
     handleCheck(newproduct)
+    checkemail()
   };
 
   const handleCheck = (prod: any) => {
     let invalid = false;
+    // for (let a in prod) {
+    //   if (a !== "sizes") {
+    //     if (prod[a] === "") {
+    //       invalid = true
+    //     }
+    //   } else {
+    //     if (prod[a].length === 0) {
+    //       invalid = true
+    //     }
+    //   }
+    // }
+
     for (let a in prod) {
-      if (a !== "sizes") {
-        if (prod[a] == "") {
+      if (a === "productName") {
+        if (prod[a].length < 6) {
           invalid = true
         }
-      } else {
-        if (prod[a].length == 0) {
+      } else if (a === "email") {
+        if (checkemail()) {
           invalid = true
         }
       }
@@ -49,10 +63,20 @@ export const ProductModel: React.FC<ProductModelProps> = ({
     }
     console.log("invalid :", invalid)
   }
+  const checkemail = () => {
+    let pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    if (!pattern.test(product['email'])) {
+      setemailValid(false)
+      return true
+    } else {
+      setemailValid(true)
+      return false
+    }
+  }
   const handleCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     let newProduct: any = { ...product }
-    if (newProduct.sizes.indexOf(value) == -1) {
+    if (newProduct.sizes.indexOf(value) === -1) {
       newProduct.sizes.push(value)
     } else {
       newProduct.sizes.splice(newProduct.sizes.indexOf(value), 1)
@@ -103,6 +127,9 @@ export const ProductModel: React.FC<ProductModelProps> = ({
                         value={product.productName}
                         onChange={handleChange}
                       />
+                      {product.productName.length > 0 &&
+                        product.productName.length < 6 &&
+                        <p style={{ color: "red" }}>Should Be minimum 6 Characters</p>}
                     </div>
                     <div className="mb-3">
                       <label className="form-label">User Email</label>
@@ -113,6 +140,8 @@ export const ProductModel: React.FC<ProductModelProps> = ({
                         value={product.email}
                         onChange={handleChange}
                       />
+                      {!emailValid &&
+                        product.email.length > 0 && <p style={{ color: "red" }}>Enter Valid Email</p>}
                     </div>
                     <div className="mb-3">
                       <label className="form-label">Product Qty</label>
@@ -162,8 +191,8 @@ export const ProductModel: React.FC<ProductModelProps> = ({
                     <div className="mb-3">
                       <label className="form-label">Product Category</label>
                       <select className="form-select" onChange={handleSelectChange}
-                      >
-                        <option selected>Select Product Category</option>
+                        name="category">
+                        <option >Select Product Category</option>
                         <option value="Electronics">Electronics</option>
                         <option value="Groceries">Groceries</option>
                         <option value="Foods">Foods</option>
