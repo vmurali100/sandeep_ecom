@@ -23,5 +23,8 @@ code {
 
 .modal-dialog {
   max-width: 800px;
-  margin-top: -100px;
+  position: absolute;
+  width: 50%;
+  top: 100px;
+  left: 25%;
 }

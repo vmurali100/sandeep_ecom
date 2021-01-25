@@ -1,0 +1,51 @@
+{
+  "products": [
+    {
+      "productName": "Sandi123",
+      "productQty": "100",
+      "email": "vmurali100@gmail.com",
+      "category": "Electronics",
+      "discount": "yes",
+      "sizes": [
+        "XXL"
+      ],
+      "id": 1
+    },
+    {
+      "productName": "ABC123",
+      "productQty": "100",
+      "email": "vmurali100@gmail.co",
+      "category": "Electronics",
+      "discount": "yes",
+      "sizes": [
+        "Normal",
+        "XXL"
+      ],
+      "id": 2
+    },
+    {
+      "productName": "Murali123",
+      "productQty": "100",
+      "email": "vmurali100@gmail.co",
+      "category": "Electronics",
+      "discount": "yes",
+      "sizes": [
+        "Normal",
+        "XXL"
+      ],
+      "id": 3
+    },
+    {
+      "productName": "ABC123",
+      "productQty": "100",
+      "email": "vmurali100@gmail.co",
+      "category": "Electronics",
+      "discount": "yes",
+      "sizes": [
+        "Normal",
+        "XXL"
+      ],
+      "id": 4
+    }
+  ]
+}
