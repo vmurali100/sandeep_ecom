@@ -15,7 +15,7 @@ export const ProductModel: React.FC<ProductModelProps> = ({
       productQty: 0,
       email: "",
       category: '',
-      discount: 0,
+      discount: '',
       sizes: [],
     });
 

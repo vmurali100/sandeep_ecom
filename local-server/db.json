@@ -1,12 +1,13 @@
 {
   "products": [
     {
-      "productName": "Sandi123",
-      "productQty": "100",
-      "email": "vmurali100@gmail.com",
-      "category": "Electronics",
-      "discount": "yes",
+      "productName": "Sandi1122",
+      "productQty": "10000",
+      "email": "sandy123@gmail.com",
+      "category": "Groceries",
+      "discount": "no",
       "sizes": [
+        "XL",
         "XXL"
       ],
       "id": 1
@@ -16,10 +17,10 @@
       "productQty": "100",
       "email": "vmurali100@gmail.co",
       "category": "Electronics",
-      "discount": "yes",
+      "discount": "no",
       "sizes": [
         "Normal",
-        "XXL"
+        "XL"
       ],
       "id": 2
     },
@@ -30,22 +31,10 @@
       "category": "Electronics",
       "discount": "yes",
       "sizes": [
-        "Normal",
+        "XL",
         "XXL"
       ],
       "id": 3
-    },
-    {
-      "productName": "ABC123",
-      "productQty": "100",
-      "email": "vmurali100@gmail.co",
-      "category": "Electronics",
-      "discount": "yes",
-      "sizes": [
-        "Normal",
-        "XXL"
-      ],
-      "id": 4
     }
   ]
 }

@@ -10,15 +10,43 @@ export interface Product {
   productName: string;
   productQty: number;
   category: string;
-  discount: number;
+  discount: string;
   sizes: string[];
   email: string;
   prodDate?: Date;
   id?: number
 }
+export interface Size {
+  type: string;
+  checked: boolean
+}
 export const DashBoard: React.FC<any> = () => {
   const allProducts = useSelector((state: RootStore) => state.products)
   const [showModal, setshowModal] = useState(false);
+  const [selectedProduct, setselectedProduct] = useState({
+    productName: "",
+    productQty: 0,
+    email: "",
+    category: '',
+    discount: '',
+    sizes: [],
+  })
+  const [selectedSizes, setselectedSizes] = useState([
+    {
+      type: 'Normal',
+      checked: false
+    },
+    {
+      type: 'XL',
+      checked: false
+
+    },
+    {
+      type: 'XXL',
+      checked: false
+
+    }
+  ])
   // const [allProducts, setallProducts] = useState([]);
   const [showEdit, setshowEdit] = useState(false);
   const [index, setindex] = useState(0)
@@ -53,7 +81,7 @@ export const DashBoard: React.FC<any> = () => {
     productQty: 0,
     email: "",
     category: '',
-    discount: 0,
+    discount: '',
     sizes: [],
   })
   const dispatch = useDispatch()
@@ -87,12 +115,14 @@ export const DashBoard: React.FC<any> = () => {
     let selectedProduct: any = allProducts[i]
     let allSizes = [...sizes]
     sizes.forEach((size) => {
+      size.checked = false
       selectedProduct['sizes'].forEach((s: any) => {
         if (size.type == s) {
           size.checked = true
         }
       })
     })
+    setsizes(allSizes)
     let allDiscounts = [...discounts]
     allDiscounts.forEach((discount) => {
       if (discount.type === selectedProduct.discount) {
@@ -100,8 +130,8 @@ export const DashBoard: React.FC<any> = () => {
       }
     })
     setdiscounts(allDiscounts)
-    setsizes(allSizes)
-    setproduct(selectedProduct)
+    setselectedSizes(allSizes)
+    setselectedProduct(selectedProduct)
   }
   const hanldeDelete = (i: number) => {
     console.log(allProducts[i])
@@ -115,9 +145,9 @@ export const DashBoard: React.FC<any> = () => {
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let newProduct: any = { ...product }
+    let newProduct: any = { ...selectedProduct }
     newProduct[e.target.name] = e.target.value
-    setproduct(newProduct)
+    setselectedProduct(newProduct)
   }
 
   const handleCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -130,67 +160,50 @@ export const DashBoard: React.FC<any> = () => {
         discount.checked = true
       } else {
         discount.checked = false
-
       }
     })
     setdiscounts(allDiscounts)
   }
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value)
-    let newProduct: any = { ...product }
+    let newProduct: any = { ...selectedProduct }
     newProduct[e.target.name] = e.target.value
-    setproduct(newProduct)
+    setselectedProduct(newProduct)
 
   }
 
   const handleSizeChange = (e: ChangeEvent<HTMLInputElement>) => {
- 
-    const newSizes = [...sizes];
-    let newProduct: any = { ...product }
-
-    const newCheckedValues: string[] = newProduct.sizes
-
-    newSizes.forEach(size => {
-      if (size.type === e.target.value) {
+    let val = e.target.value
+    let newSizes = [...sizes];
+    let selectedProd = { ...selectedProduct }
+    newSizes.forEach((size) => {
+      if (size.type == val) {
         if (size.checked) {
           size.checked = false
-          newCheckedValues.splice(newCheckedValues.indexOf(e.target.value), 1)
         } else {
-          size.checked = true;
-          if (newCheckedValues.indexOf(e.target.value) === -1) {
-            newCheckedValues.push(e.target.value)
-          }
+          size.checked = true
         }
       }
+
     })
     setsizes(newSizes)
-    newProduct.sizes = newCheckedValues;
-    // setproduct(newProduct)
-    console.log(newSizes)
-    // let newProduct: any = { ...product }
-    // let value: string = e.target.value
-    // newSizes.forEach(newSize => {
-    //   if (e.target.value === newSize.type) {
-    //     if (e.target.checked) {
-    //       e.target.checked = false;
-    //       newSize.checked = false
-    //       newCheckedValues.splice(newCheckedValues.indexOf(value), 1)
-    //     } else {
-    //       e.target.checked = true;
-    //       newSize.checked = true;
-    //       newCheckedValues.push(e.target.value)
-    //     }
-    //   }
-    // })
-    // newProduct.sizes = newCheckedValues;
-    // setproduct(newProduct);
   }
   const handleUpdate = () => {
-    // let newProducts: any = [...allProducts]
-    // newProducts[index] = product
-    // setallProducts(newProducts)
-    dispatch(updateProduct(product))
+    let newProducts: any = [...allProducts]
+    newProducts[index] = selectedProduct;
+    let selectedSizes: string[] = []
+    sizes.forEach((size: Size) => {
+      if (size.checked) {
+        selectedSizes.push(size.type)
+      }
+    })
+    discounts.forEach(discount => {
+      if (discount.checked) {
+        newProducts[index].discount = discount.type
+      }
+    })
+    newProducts[index].sizes = selectedSizes;
+    dispatch(updateProduct(newProducts[index]))
     setshowEdit(false)
   }
   return (
@@ -211,7 +224,8 @@ export const DashBoard: React.FC<any> = () => {
           </div>
         </div>
         <Products allProducts={allProducts} handleEdit={handleEdit} hanldeDelete={hanldeDelete} />
-        {showEdit && <EditComponent product={product}
+        {showEdit && <EditComponent
+          product={selectedProduct}
           handleChange={handleChange}
           handleCheckChange={handleCheckChange}
           handleSelectChange={handleSelectChange}
