@@ -1,5 +1,5 @@
 import { Product } from './../DashBoard';
-import { ProductActionTypes, GET_ALL_PRODUCTS, ADD_PRODUCT, DELETE_PRODUCT, UPDATE_PRODUCT } from './ProductActionTypes';
+import { ProductActionTypes, GET_ALL_PRODUCTS, ADD_PRODUCT, DELETE_PRODUCT, UPDATE_PRODUCT, SEARCH_PRODUCT } from './ProductActionTypes';
 import { Dispatch } from "react"
 import axios from 'axios';
 
@@ -56,4 +56,11 @@ export const updateProduct = (product:Product)=> async (dispatch:Dispatch<Produc
     } catch (error) {
         
     }
+}
+
+export const searchProduct=(data:any)=> (dispatch:Dispatch<ProductActionTypes>)=>{
+    dispatch({
+        type:SEARCH_PRODUCT,
+        payLoad:data
+    })
 }

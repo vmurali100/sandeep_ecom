@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductAction, deleteProduct, getAllProducts, updateProduct } from "./actions/ProductActions";
+import { addProductAction, deleteProduct, getAllProducts, searchProduct, updateProduct } from "./actions/ProductActions";
 import { EditComponent } from "./EditComponent";
 import { ProductModel } from "./ProductModel";
 import { Products } from "./Products";
+import { Search } from "./Search";
 import { RootStore } from './store/store'
 
 export interface Product {
@@ -21,7 +22,7 @@ export interface Size {
   checked: boolean
 }
 export const DashBoard: React.FC<any> = () => {
-  const allProducts = useSelector((state: RootStore) => state.products)
+  const allProducts = useSelector((state: RootStore) => state.products);
   const [showModal, setshowModal] = useState(false);
   const [selectedProduct, setselectedProduct] = useState({
     productName: "",
@@ -206,6 +207,45 @@ export const DashBoard: React.FC<any> = () => {
     dispatch(updateProduct(newProducts[index]))
     setshowEdit(false)
   }
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value)
+    let val = e.target.value
+    let defaultProducts = [...allProducts];
+    let filteredProducts: any = []
+    if (val.length == 0) {
+      dispatch(getAllProducts())
+    } else {
+      // filtering Logic Comes Here
+      // for (let a in selectedProduct) {
+      //   if (a !== "sizes") {
+
+      //     // filteredProducts = defaultProducts.filter((prod: any) => prod.productName.toLowerCase().indexOf(val.toLowerCase()) > -1)
+      //   }
+      // }
+      filteredProducts = defaultProducts.filter((prod: any) => {
+        let check = false;
+        for (let a in prod) {
+          if (a !== "sizes" && a !== "id") {
+            if (prod[a].indexOf(val) > -1) {
+              check = true
+            }
+          } else if (a === "sizes") {
+            // eslint-disable-next-line no-loop-func
+            prod[a].forEach((pVal: string) => {
+              if (pVal.indexOf(val) > -1) {
+                check = true
+              }
+            })
+          }
+        }
+        if (check) {
+          return prod
+        }
+      })
+      dispatch(searchProduct(filteredProducts))
+    }
+  }
   return (
     <div>
       <div className="container">
@@ -221,6 +261,15 @@ export const DashBoard: React.FC<any> = () => {
             >
               Add Product
             </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col"></div>
+          <div className="col"></div>
+          <div className="col">
+            <div className="col text-end">
+              <Search handleSearch={handleSearch} />
+            </div>
           </div>
         </div>
         <Products allProducts={allProducts} handleEdit={handleEdit} hanldeDelete={hanldeDelete} />

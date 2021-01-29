@@ -4,6 +4,7 @@ export const GET_ALL_PRODUCTS = "GET_ALL_PRODUCTS";
 export const ADD_PRODUCT= "ADD_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const UPDATE_PRODUCT="UPDATE_PRODUCT";
+export const SEARCH_PRODUCT="SEARCH_PRODUCT"
 
 
 export type ProductType = {
@@ -29,4 +30,13 @@ export type UpdateProduct = {
 
 }
 
-export type ProductActionTypes = GetAllProducts | AddProduct | DeleteProduct | UpdateProduct
+export type ProductSearch={
+    type:typeof SEARCH_PRODUCT,
+    payLoad?:ProductType
+}
+
+export type ProductActionTypes = GetAllProducts | 
+                                    AddProduct | 
+                                    DeleteProduct | 
+                                    UpdateProduct |
+                                    ProductSearch

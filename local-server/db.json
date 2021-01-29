@@ -35,6 +35,18 @@
         "XXL"
       ],
       "id": 3
+    },
+    {
+      "productName": "product1",
+      "productQty": "100",
+      "email": "vmurali100@gmail.com",
+      "category": "Electronics",
+      "discount": "yes",
+      "sizes": [
+        "Normal",
+        "XL"
+      ],
+      "id": 4
     }
   ]
 }
