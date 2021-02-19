@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAction, deleteProduct, getAllProducts, searchProduct, updateProduct } from "./actions/ProductActions";
 import { EditComponent } from "./EditComponent";
+import { Navbar } from "./Navbar";
 import { ProductModel } from "./ProductModel";
 import { Products } from "./Products";
 import { Search } from "./Search";
@@ -22,7 +23,10 @@ export interface Size {
   checked: boolean
 }
 export const DashBoard: React.FC<any> = () => {
-  const allProducts = useSelector((state: RootStore) => state.products);
+  const allProducts: any = useSelector((state: RootStore) => state.products);
+  console.log(allProducts)
+
+
   const [showModal, setshowModal] = useState(false);
   const [selectedProduct, setselectedProduct] = useState({
     productName: "",
@@ -32,6 +36,16 @@ export const DashBoard: React.FC<any> = () => {
     discount: '',
     sizes: [],
   })
+  const [tableHeaders, settableHeaders] = useState([
+
+    { headerName: "Product Name", headerString: "productName" },
+    { headerName: "Procut Qty", headerString: "productQty" },
+    { headerName: "Email", headerString: "email" },
+    { headerName: "Procuct Catagory", headerString: "category" },
+    { headerName: "Discount", headerString: "discount" },
+    { headerName: "Sizes", headerString: "sizes" },
+    { headerName: "ID", headerString: "id" },
+  ])
   const [selectedSizes, setselectedSizes] = useState([
     {
       type: 'Normal',
@@ -89,6 +103,14 @@ export const DashBoard: React.FC<any> = () => {
   useEffect(() => {
     dispatch(getAllProducts())
   }, [])
+
+  // const calculatePages = () => {
+  //   console.log(allProducts)
+  //   let allProductsDetails: any = allProducts
+  //   if (allProductsDetails) {
+  //     console.log(allProductsDetails.length)
+  //   }
+  // }
 
   const handleModal = () => {
     setshowModal(true);
@@ -246,8 +268,31 @@ export const DashBoard: React.FC<any> = () => {
       dispatch(searchProduct(filteredProducts))
     }
   }
+  const handleSort = (sortName: string) => {
+    console.log(sortName)
+    let mainProducts: any = [...allProducts]
+    let sorted = mainProducts.sort(function (a: any, b: any) {
+      if (sortName !== "id") {
+        var nameA = a[sortName].toLowerCase(), nameB = b[sortName].toLowerCase()
+      } else {
+        var nameA = a[sortName], nameB = b[sortName]
+
+      }
+      if (nameA < nameB) //sort string ascending
+        return -1
+      if (nameA > nameB)
+        return 1
+      return 0 //default return value (no sorting)
+    })
+    console.log(sorted)
+    dispatch(searchProduct(sorted))
+
+  }
+
+
   return (
     <div>
+      <Navbar title={"E Commerce Application"} />
       <div className="container">
         <div className="row ">
           <div className="col"></div>
@@ -272,7 +317,13 @@ export const DashBoard: React.FC<any> = () => {
             </div>
           </div>
         </div>
-        <Products allProducts={allProducts} handleEdit={handleEdit} hanldeDelete={hanldeDelete} />
+        <Products
+          tableHeaders={tableHeaders}
+          handleSort={handleSort}
+          allProducts={allProducts}
+          handleEdit={handleEdit}
+          hanldeDelete={hanldeDelete} />
+
         {showEdit && <EditComponent
           product={selectedProduct}
           handleChange={handleChange}
@@ -287,6 +338,6 @@ export const DashBoard: React.FC<any> = () => {
           <ProductModel closeModel={handleModalClose} addProduct={addProduct} />
         )}
       </div>
-    </div>
+    </div >
   );
 };

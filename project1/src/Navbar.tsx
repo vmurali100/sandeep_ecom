@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from "react";
+import { useHistory } from "react-router-dom";
 
 type NavbarProps = {
   title: string;
@@ -7,6 +8,11 @@ type NavbarProps = {
 export const Navbar: React.FC<NavbarProps> = (
   props: PropsWithChildren<any>
 ) => {
+  let history = useHistory();
+
+  const handleLogout = () => {
+    history.push("/");
+  }
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,6 +46,11 @@ export const Navbar: React.FC<NavbarProps> = (
               <li className="nav-item">
                 <a className="nav-link" href="/pricing">
                   Pricing
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#" onClick={handleLogout}>
+                  Logout
                 </a>
               </li>
             </ul>
